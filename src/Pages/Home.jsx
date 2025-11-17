@@ -1,12 +1,14 @@
 import React from 'react';
 import BannerSlider from "../Components/BannerSlider";
 import IssueCategories from "../Components/IssueCategories";
+import LatestIssues from "../Components/LatestIssues";
 
 const Home = () => {
     return (
         <div>
           <BannerSlider></BannerSlider>
           <IssueCategories></IssueCategories>
+           <LatestIssues></LatestIssues>
         </div>
     );
 };
