@@ -1,30 +1,216 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
 @import "tailwindcss";
-@plugin "daisyui";
-
+@plugin "daisyui" {
+  themes: myTheme --default, dark --prefersdark;
+}
 @plugin "daisyui/theme" {
   name: "mytheme";
-  default: true; /* set as default */
-  prefersdark: true; /* set as default dark mode (prefers-color-scheme:dark) */
-  color-scheme: light; /* color of browser-provided UI */
+  default: true;
+  prefersdark: true;
+  color-scheme: light;
 
-  --color-base-100: oklch(98% 0.02 240);
-  --color-base-200: oklch(95% 0.03 240);
-  --color-base-300: oklch(92% 0.04 240);
-  --color-base-content: oklch(20% 0.05 240);
-  --color-primary: oklch(55% 0.3 240);
-  --color-primary-content: oklch(98% 0.01 240);
-  --color-secondary: oklch(70% 0.25 200);
-  --color-secondary-content: oklch(98% 0.01 200);
-  --color-accent: oklch(65% 0.25 160);
-  --color-accent-content: oklch(98% 0.01 160);
-  --color-neutral: oklch(50% 0.05 240);
+  /* Brand greens */
+  --color-primary: oklch(55% 0.25 150); /* medium eco green */
+  --color-primary-content: oklch(98% 0.01 150);
+
+  --color-secondary: oklch(65% 0.2 180); /* teal/blue‑green */
+  --color-secondary-content: oklch(98% 0.01 180);
+
+  --color-accent: oklch(70% 0.25 140); /* fresh lime accent */
+  --color-accent-content: oklch(98% 0.01 140);
+
+  /* Neutral grays */
+  --color-neutral: oklch(40% 0.02 240);
   --color-neutral-content: oklch(98% 0.01 240);
-  --color-info: oklch(70% 0.2 220);
-  --color-info-content: oklch(98% 0.01 220);
-  --color-success: oklch(65% 0.25 140);
+
+  /* Status colors */
+  --color-info: oklch(70% 0.2 200); /* aqua info */
+  --color-info-content: oklch(98% 0.01 200);
+
+  --color-success: oklch(60% 0.25 140); /* success green */
   --color-success-content: oklch(98% 0.01 140);
-  --color-warning: oklch(80% 0.25 80);
-  --color-warning-content: oklch(20% 0.05 80);
-  --color-error: oklch(65% 0.3 30);
+
+  --color-warning: oklch(80% 0.25 90); /* warm yellow */
+  --color-warning-content: oklch(20% 0.05 90);
+
+  --color-error: oklch(55% 0.25 30); /* earthy red */
   --color-error-content: oklch(98% 0.01 30);
+
+  /* border radius */
+  --radius-selector: 1rem;
+  --radius-field: 0.25rem;
+  --radius-box: 0.5rem;
+
+  /* base sizes */
+  --size-selector: 0.25rem;
+  --size-field: 0.25rem;
+
+  /* border size */
+  --border: 1px;
+
+  /* effects */
+  --depth: 1;
+  --noise: 0;
+}
+@plugin "daisyui/theme" {
+  name: "dark";
+  color-scheme: dark;
+
+  /* Backgrounds */
+  --color-primary: oklch(52% 0.18 150); /* softer green for dark mode */
+  --color-secondary: oklch(58% 0.16 180); /* teal, less bright */
+  --color-accent: oklch(62% 0.18 140); /* lime accent, balanced */
+  --color-neutral: oklch(28% 0.02 240); /* deep gray */
+
+  /* Brand greens (slightly brighter for dark mode) */
+  --color-primary: oklch(56% 0.18 150); /* softer eco green */
+  --color-primary-content: oklch(95% 0.01 150); /* light text for contrast */
+
+  --color-secondary: oklch(70% 0.2 180); /* teal/blue‑green */
+  --color-secondary-content: oklch(10% 0.02 180);
+
+  --color-accent: oklch(75% 0.25 140); /* lime accent pops more */
+  --color-accent-content: oklch(10% 0.02 140);
+
+  /* Neutral grays */
+  --color-neutral: oklch(25% 0.02 240);
+  --color-neutral-content: oklch(95% 0.01 240);
+
+  /* Status colors (slightly more saturated for visibility) */
+  --color-info: oklch(75% 0.2 200);
+  --color-info-content: oklch(10% 0.02 200);
+
+  --color-success: oklch(65% 0.25 140);
+  --color-success-content: oklch(10% 0.02 140);
+
+  --color-warning: oklch(85% 0.25 90);
+  --color-warning-content: oklch(15% 0.05 90);
+
+  --color-error: oklch(60% 0.25 30);
+  --color-error-content: oklch(10% 0.02 30);
+
+  /* border radius */
+  --radius-selector: 1rem;
+  --radius-field: 0.25rem;
+  --radius-box: 0.5rem;
+
+  /* base sizes */
+  --size-selector: 0.25rem;
+  --size-field: 0.25rem;
+
+  /* border size */
+  --border: 1px;
+
+  /* effects */
+  --depth: 1;
+  --noise: 0;
+}
+
+@custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
+
+#root {
+  font-family: "Inter", sans-serif;
+  font-optical-sizing: auto;
+  font-style: normal;
+}
+a {
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+/* Hover effect */
+a:hover {
+  color: #10b981;
+}
+
+
+a.active {
+  color: #10b981; 
+  font-weight: bold;
+  border-bottom: 2px solid #10b981;
+}
+
+.swiper-button-next,
+.swiper-button-prev {
+  color: hsl(var(--pc));
+  background: hsl(var(--b1));
+  padding: 0.75rem;
+  border-radius: 9999px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+.swiper-button-next:hover,
+.swiper-button-prev:hover {
+  color: hsl(var(--pc));
+  background: hsl(var(--p));
+}
+
+.rdg {
+  --rdg-color: #000;
+  --rdg-background-color: #fff;
+  --rdg-header-background-color: #f1f1f1;
+  --rdg-border-color: #ccc;
+  --rdg-row-hover-background-color: #e8f5e9;
+}
+
+.rdg .rdg-row:hover {
+  transition: background-color 0.2s ease-in-out;
+}
+
+@keyframes gradient {
+  0%,
+  100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+.animate-gradient {
+  background-size: 200% 200%;
+  animation: gradient 5s ease infinite;
+}
+
+@keyframes gradient {
+  0%,
+  100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+.animate-gradient {
+  background-size: 200% 200%;
+  animation: gradient 5s ease infinite;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.8s ease-out;
+}
+
+@keyframes pulse-slow {
+  0%,
+  100% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 0.2;
+  }
+}
+
+.animate-pulse-slow {
+  animation: pulse-slow 3s ease-in-out infinite;
 }
