@@ -19,7 +19,7 @@ const IssueDetails = () => {
   const axiosInstance = useAxios();
    const [contricbutions, setContricbutions] = useState([]);
   const [refetch, setRefetch] = useState(false);
-  console.log(user);
+  console.log(data);
 
   const handlePayUpContribution = (e) => {
     e.preventDefault();
@@ -185,7 +185,7 @@ const IssueDetails = () => {
                 <input
                   type="email"
                   name="email"
-                  defaultValue={data?.email}
+                  defaultValue={user?.email}
                   readOnly
                   className="input input-bordered w-full"
                 />
