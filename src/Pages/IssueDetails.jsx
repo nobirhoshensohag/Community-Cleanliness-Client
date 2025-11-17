@@ -41,6 +41,8 @@ const IssueDetails = () => {
       name: user?.displayName,
       email: user?.email,
       image: user?.photoURL,
+      category: data?.category,
+      title: data?.title,
     };
     console.log(newContribution);
 
@@ -147,6 +149,7 @@ const IssueDetails = () => {
                 <label className="label">Issue Title</label>
                 <input
                   type="text"
+                  name="title"
                   defaultValue={data?.title}
                   readOnly
                   className="input input-bordered w-full"
@@ -169,6 +172,7 @@ const IssueDetails = () => {
                 <label className="label">Contributor Name</label>
                 <input
                   type="text"
+                  name="name"
                    defaultValue={user?.displayName}
                   placeholder="Your name"
                   className="input input-bordered w-full"
