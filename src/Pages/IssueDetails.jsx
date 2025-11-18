@@ -1,5 +1,5 @@
-import React, { useContext, useEffect, useState } from "react";
-import { useLoaderData } from "react-router";
+import { useContext, useEffect, useState } from "react";
+import { Link, useLoaderData, useNavigate } from "react-router";
 import {
   FaTrash,
   FaHardHat,
@@ -8,18 +8,22 @@ import {
   FaArrowLeft,
 } from "react-icons/fa";
 import Container from "../Components/Container";
-import useAxios from "../Hooks/useAxios";
 import { AuthContext } from "../Provider/AuthContext";
 import Loading from "../Components/Loading";
+import useAxiosSecure from "../Hooks/useAxiosSecure";
+import useAxios from "../Hooks/useAxios";
+import toast from "react-hot-toast";
 
 const IssueDetails = () => {
-  const { user, loading } = useContext(AuthContext);
+  const { user } = useContext(AuthContext);
   const data = useLoaderData();
   const [showModal, setShowModal] = useState(false);
+  const axiosSecure = useAxiosSecure();
   const axiosInstance = useAxios();
-   const [contricbutions, setContricbutions] = useState([]);
+  const [contricbutions, setContricbutions] = useState([]);
   const [refetch, setRefetch] = useState(false);
-  console.log(data);
+  const navigate = useNavigate();
+  const [loading, setLoading] = useState(true);
 
   const handlePayUpContribution = (e) => {
     e.preventDefault();
@@ -29,7 +33,6 @@ const IssueDetails = () => {
     const phoneNumber = e.target.number.value;
     const amount = e.target.amount.value;
     const date = e.target.date.value;
-    // console.log({ additionalInfo, address, amount, phoneNumber, date });
 
     const newContribution = {
       issueId: data._id,
@@ -44,24 +47,24 @@ const IssueDetails = () => {
       category: data?.category,
       title: data?.title,
     };
-    console.log(newContribution);
 
-    axiosInstance.post("/contributions", newContribution).then((data) => {
+    axiosSecure.post("/contributions", newContribution).then((data) => {
       if (data.data.insertedId) {
-        alert("contribution success");
-         setShowModal(false);
-        console.log("data after post", data.data);
-         setRefetch((prev) => !prev);
+        toast.success("contribution success");
+        setShowModal(false);
+        setRefetch((prev) => !prev);
       }
     });
   };
-  useEffect(() => {
-    axiosInstance.get(`/contributions/${data.issueId}`).then((data) => {
-      setContricbutions(data.data);
-    });
-  }, [axiosInstance, data?.issueId, refetch]);
 
-  console.log(contricbutions);
+  useEffect(() => {
+    axiosInstance.get(`/contributions/${data?._id}`).then((data) => {
+      setContricbutions(data.data);
+      setLoading(false);
+    });
+  }, [axiosInstance, data?._id, refetch]);
+
+  const decContribution = contricbutions.sort((a, b) => b.amount - a.amount);
 
   const { Icon, badgeClass } =
     data.category === "Garbage"
@@ -80,55 +83,90 @@ const IssueDetails = () => {
 
   return (
     <Container className="p-6 md:p-10 min-h-screen space-y-10">
+      <title>Issue Details</title>
       <h2 className="text-3xl font-bold mb-8">
-         <span>
+        <Link onClick={() => navigate(-1)}>
           <FaArrowLeft />
-        </span>
+        </Link>
         Issue <span className="text-primary">Details</span>
       </h2>
-      <div className="card bg-base-100 shadow-xl max-w-3xl mx-auto">
+      <div className="card bg-base-100 shadow-xl w-full mx-auto overflow-hidden hover:shadow-2xl transition-all duration-300">
         {/* Image */}
-        <figure>
+        <figure className="relative overflow-hidden">
           <img
             src={data.image}
             alt={data.title}
-            className="w-full h-100 object-cover rounded-t-xl"
+            className="w-full h-100 object-cover"
           />
+          <div className="absolute inset-0 bg-linear-to-t from-base-100/10 to-transparent"></div>
         </figure>
 
-        <div className="card-body space-y-4">
+        <div className="card-body space-y-4 p-6">
           {/* Title */}
-          <h2 className="card-title text-2xl font-bold text-primary">
-            {data.title}
-          </h2>
+          <div className="border-l-4 border-primary pl-3 -ml-3">
+            <h2 className="card-title text-2xl font-bold text-base-content">
+              {data.title}
+            </h2>
+          </div>
 
-          {/* Category + Location */}
-          <div className="flex flex-wrap gap-4 text-sm text-neutral-content">
-            <span className={`badge ${badgeClass} flex items-center gap-1`}>
-              <Icon className="h-3 w-3" /> {data.category}
+          {/* Category & Location */}
+          <div className="flex flex-col sm:flex-row sm:items-center gap-3 text-sm">
+            <span
+              className={`badge ${badgeClass} badge-lg text-primary-content font-semibold px-3 py-2 flex items-center gap-2 w-fit`}
+            >
+              <Icon className="h-3.5 w-3.5" />
+              {data.category}
             </span>
-            <span className="text-accent">
-              <strong className="text-black">Location:</strong> {data.location}
-            </span>
+            <div className="flex items-center gap-2 text-base-content/80">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-4 w-4 text-accent"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z"
+                  clipRule="evenodd"
+                />
+              </svg>
+              <span className="font-medium">{data.location}</span>
+            </div>
           </div>
 
           {/* Description */}
-          <p className="text-base-content">{data.description}</p>
+          <div className="bg-base-200/50 rounded-lg p-4 border border-base-300/30">
+            <p className="text-base-content/80 leading-relaxed">
+              {data.description}
+            </p>
+          </div>
 
-          {/* Date + Amount */}
-          <div className="flex justify-between items-center text-sm mt-2">
-            <span>
-              <strong>Date:</strong> {data.date}
-            </span>
-            <span className="font-semibold text-success">
-              Amout: ${data.amount}
-            </span>
+          {/* Date & Amount */}
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 p-4 bg-base-200/30 rounded-lg border border-base-300/20">
+            <div className="flex items-center gap-2 text-base-content/70">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-4 w-4 text-info"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z"
+                  clipRule="evenodd"
+                />
+              </svg>
+              <span className="font-medium">{data.date}</span>
+            </div>
+            <div className="flex items-center gap-2 bg-success/10 text-success px-3 py-1.5 rounded-full border border-success/20">
+              <span className="font-bold">Amount: ${data.amount}</span>
+            </div>
           </div>
 
           {/* Pay Contribution Button */}
-          <div className="card-actions justify-end mt-4">
+          <div className="card-actions justify-end mt-2 pt-4 border-t border-base-300/30">
             <button
-              className="btn btn-primary"
+              className="btn btn-primary px-8 font-semibold text-primary-content hover:scale-105 transform transition-all duration-300 hover:shadow-lg active:scale-95"
               onClick={() => setShowModal(true)}
             >
               Pay Clean-Up Contribution
@@ -137,10 +175,9 @@ const IssueDetails = () => {
         </div>
       </div>
 
-      {/* DaisyUI Modal */}
       {showModal && (
         <div className="modal modal-open">
-          <div className="modal-box w-full max-w-lg">
+          <div className="modal-box w-full max-w-lg bg-white dark:bg-base-100">
             <h3 className="font-bold text-lg mb-4">Contribution Form</h3>
 
             <form onSubmit={handlePayUpContribution} className="space-y-4">
@@ -173,7 +210,7 @@ const IssueDetails = () => {
                 <input
                   type="text"
                   name="name"
-                   defaultValue={user?.displayName}
+                  defaultValue={user?.displayName}
                   placeholder="Your name"
                   className="input input-bordered w-full"
                 />
@@ -219,7 +256,7 @@ const IssueDetails = () => {
                 <input
                   type="text"
                   name="date"
-                   defaultValue={new Date().toLocaleDateString()}
+                  defaultValue={new Date().toLocaleDateString()}
                   readOnly
                   className="input input-bordered w-full"
                 />
@@ -252,52 +289,50 @@ const IssueDetails = () => {
           </div>
         </div>
       )}
-       <div className="overflow-x-auto">
-        <h2 className="text-3xl font-bold mb-8">
+      <div className="overflow-x-auto">
+        <h2 className="text-4xl font-bold mb-8">
           Contributors of this <span className="text-primary">Issue</span>
         </h2>
-        {contricbutions.length === 0 ? (
-          <h3 className="text-primary text-xl font-semibold">
+        {decContribution?.length === 0 ? (
+          <h3 className=" text-warning text-xl font-semibold">
             No one Contributed for this Issue
           </h3>
         ) : (
-          <table className="table">
+          <table className="table bg-base-100">
             <thead>
               <tr>
                 <th>SL NO</th>
-                <th>Image</th>
-                <th>Name</th>
+                <th>User Info</th>
                 <th>Amount</th>
               </tr>
             </thead>
             <tbody>
-              {contricbutions.map((contricbution, index) => (
+              {decContribution.map((contricbution, index) => (
                 <tr key={contricbution._id}>
                   <td>{index + 1}</td>
                   <td>
-                    <div className="flex items-center gap-3">
-                      <div className="avatar">
+                    <div className="flex items-center">
+                      <div className="avatar flex justify-center items-center gap-2">
                         <div className="mask mask-squircle h-12 w-12">
                           <img
                             src={
-                              contricbution.image ||
-                              "https://img.daisyui.com/images/profile/demo/5@94.webp"
+                              contricbution.image.startsWith("https")
+                                ? contricbution.image
+                                : "https://i.ibb.co.com/CpHdF8h2/icons8-user.gif"
                             }
                             alt={contricbution.title}
                           />
                         </div>
+                        <span className="text-accent font-semibold">
+                          {contricbution.name}
+                        </span>
                       </div>
                       <div>
-                        <div className="font-bold">{contricbution.title}</div>
                         <div className="text-sm opacity-50">
                           {contricbution.location}
                         </div>
                       </div>
                     </div>
-                  </td>
-
-                  <td>
-                    <span className="text-accent">{contricbution.name}</span>
                   </td>
 
                   <td>${contricbution.amount}</td>

@@ -1,9 +1,7 @@
-import React from "react";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
-
 const PrevArrow = ({ onClick }) => (
   <button
     onClick={onClick}
@@ -22,9 +20,15 @@ const NextArrow = ({ onClick }) => (
   </button>
 );
 
+const handleScrollDown = () => {
+  window.scrollTo({
+    top: 650,
+    behavior: "smooth",
+  });
+};
+
 const BannerSlider = () => {
   const settings = {
-    dots: true,
     infinite: true,
     speed: 500,
     slidesToShow: 1,
@@ -81,11 +85,18 @@ const BannerSlider = () => {
               <div className="absolute inset-0 bg-linear-to-t from-black/70 via-black/30 to-transparent" />
               <div className="absolute bottom-0 left-0 right-0 p-8 md:p-12 lg:p-16 text-white">
                 <div className="container mx-auto">
-                  <h2 className="text-white mb-3 max-w-2xl">{slide.title}</h2>
+                  <h2 className="text-white mb-3 max-w-2xl text-5xl font-bold">
+                    {slide.title}
+                  </h2>
                   <p className="text-lg md:text-xl text-white/90 max-w-xl mb-6">
                     {slide.subtitle}
                   </p>
-                  <button className="btn btn-primary px-8">Get Started</button>
+                  <button
+                    onClick={handleScrollDown}
+                    className="btn btn-primary px-8"
+                  >
+                    Get Started
+                  </button>
                 </div>
               </div>
             </div>

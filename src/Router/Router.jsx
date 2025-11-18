@@ -9,6 +9,7 @@ import MyContribution from "../Pages/MyContribution";
 import Register from "../Pages/Register";
 import PrivateRoute from "./PrivateRoute";
 import IssueDetails from "../Pages/IssueDetails";
+import Error from "../Pages/Error";
 
 const router = createBrowserRouter([
   {
@@ -26,14 +27,18 @@ const router = createBrowserRouter([
       {
         path: "/issue-details/:id",
         loader: ({ params }) =>
-          fetch(`http://localhost:3000/issues/${params.id}`),
-        Component: IssueDetails,
+          fetch(`https://community-cleanliness-server-one.vercel.app/issues/${params.id}`),
+        element: (
+          <PrivateRoute>
+            <IssueDetails></IssueDetails>
+          </PrivateRoute>
+        ),
       },
       {
         path: "/add-issues",
         element: (
           <PrivateRoute>
-            <AddIssues></AddIssues>,
+            <AddIssues></AddIssues>
           </PrivateRoute>
         ),
       },
@@ -41,7 +46,7 @@ const router = createBrowserRouter([
         path: "/my-issues",
         element: (
           <PrivateRoute>
-            <MyIssues></MyIssues>,
+            <MyIssues></MyIssues>
           </PrivateRoute>
         ),
       },
@@ -49,7 +54,7 @@ const router = createBrowserRouter([
         path: "/my-contribution",
         element: (
           <PrivateRoute>
-            <MyContribution></MyContribution>,
+            <MyContribution></MyContribution>
           </PrivateRoute>
         ),
       },
@@ -60,6 +65,10 @@ const router = createBrowserRouter([
       {
         path: "/register",
         Component: Register,
+      },
+      {
+        path: "*",
+        Component: Error,
       },
     ],
   },
