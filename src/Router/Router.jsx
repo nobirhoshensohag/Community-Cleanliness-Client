@@ -10,6 +10,8 @@ import Register from "../Pages/Register";
 import PrivateRoute from "./PrivateRoute";
 import IssueDetails from "../Pages/IssueDetails";
 import Error from "../Pages/Error";
+import About from "../Pages/About";
+import Contact from "../Pages/Contact";
 
 const router = createBrowserRouter([
   {
@@ -70,6 +72,15 @@ const router = createBrowserRouter([
         path: "*",
         Component: Error,
       },
+      {
+  path: "/about",
+  Component: About,
+},
+{
+  path: "/contact",
+  Component: Contact,
+},
+
     ],
   },
 ]);
