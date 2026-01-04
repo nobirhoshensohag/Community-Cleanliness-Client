@@ -1,11 +1,13 @@
 import { createBrowserRouter } from "react-router";
 import RootLayout from "../Layout/RootLayout";
+import DashboardLayout from "../Layout/DashboardLayout";
 import Home from "../Pages/Home";
 import Login from "../Pages/Login";
 import Issues from "../Pages/Issues";
-import AddIssues from "../Pages/AddIssues";
-import MyIssues from "../Pages/MyIssues";
-import MyContribution from "../Pages/MyContribution";
+import AddIssues from "../Pages/Dashboard/AddIssues";
+import MyIssues from "../Pages/Dashboard/MyIssues";
+import MyContribution from "../Pages/Dashboard/MyContribution";
+import Profile from "../Pages/Dashboard/Profile";
 import Register from "../Pages/Register";
 import PrivateRoute from "./PrivateRoute";
 import IssueDetails from "../Pages/IssueDetails";
@@ -13,75 +15,90 @@ import Error from "../Pages/Error";
 import About from "../Pages/About";
 import Contact from "../Pages/Contact";
 
+// Dashboard pages
+import DashboardHome from "../Pages/Dashboard/DashboardHome";
+
 const router = createBrowserRouter([
   {
     path: "/",
-    Component: RootLayout,
+    element: <RootLayout />,
     children: [
       {
         index: true,
-        Component: Home,
+        element: <Home />,
       },
       {
-        path: "/issues",
-        Component: Issues,
+        path: "issues",
+        element: <Issues />,
       },
       {
-        path: "/issue-details/:id",
+        path: "issue-details/:id",
         loader: ({ params }) =>
-          fetch(`https://community-cleanliness-server-one.vercel.app/issues/${params.id}`),
+          fetch(
+            `https://community-cleanliness-server-one.vercel.app/issues/${params.id}`
+          ),
         element: (
           <PrivateRoute>
-            <IssueDetails></IssueDetails>
+            <IssueDetails />
           </PrivateRoute>
         ),
       },
       {
-        path: "/add-issues",
-        element: (
-          <PrivateRoute>
-            <AddIssues></AddIssues>
-          </PrivateRoute>
-        ),
+        path: "login",
+        element: <Login />,
       },
       {
-        path: "/my-issues",
-        element: (
-          <PrivateRoute>
-            <MyIssues></MyIssues>
-          </PrivateRoute>
-        ),
+        path: "register",
+        element: <Register />,
       },
       {
-        path: "/my-contribution",
-        element: (
-          <PrivateRoute>
-            <MyContribution></MyContribution>
-          </PrivateRoute>
-        ),
+        path: "about",
+        element: <About />,
       },
       {
-        path: "/login",
-        Component: Login,
+        path: "contact",
+        element: <Contact />,
+      },
+    ],
+  },
+
+  /* ================= Dashboard Routes ================= */
+  {
+    path: "/dashboard",
+    element: (
+      <PrivateRoute>
+        <DashboardLayout />
+      </PrivateRoute>
+    ),
+    children: [
+      {
+        index: true,
+        element: <DashboardHome />,
       },
       {
-        path: "/register",
-        Component: Register,
+        path: "add-issues",
+        element: <AddIssues />,
       },
       {
-        path: "*",
-        Component: Error,
+        path: "my-issues",
+        element: <MyIssues />,
       },
       {
-  path: "/about",
-  Component: About,
-},
-{
-  path: "/contact",
-  Component: Contact,
+        path: "my-contribution",
+        element: <MyContribution />,
+      },
+      {
+  path: "profile",
+  element: <Profile />,
 },
 
     ],
+  },
+
+  /* ================= Error ================= */
+  {
+    path: "*",
+    element: <Error />,
   },
 ]);
 

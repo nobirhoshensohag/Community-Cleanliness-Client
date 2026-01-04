@@ -1,10 +1,11 @@
 import { useContext, useEffect, useState } from "react";
-import Container from "../Components/Container";
-import { AuthContext } from "../Provider/AuthContext";
-import Table from "../Components/Table";
-import useAxiosSecure from "../Hooks/useAxiosSecure";
-import Loading from "../Components/Loading";
+import Container from "../../Components/Container";
+import { AuthContext } from "../../Provider/AuthContext";
+import Table from "../../Components/Table";
+import useAxiosSecure from "../../Hooks/useAxiosSecure";
+import Loading from "../../Components/Loading";
 import { Fade } from "react-awesome-reveal";
+import DashboardHeader from "../../Components/DashboardHeader";
 
 const MyContribution = () => {
   const axiosSecure = useAxiosSecure();
@@ -25,7 +26,8 @@ const MyContribution = () => {
 
   return (
     <Fade>
-      <Container className="min-h-screen px-5">
+  <Container className="p-6 md:p-10 min-h-screen">
+    <DashboardHeader />
         <title>My Contributions</title>
         <h2 className="text-4xl font-bold my-8 px-2">
           My <span className="text-primary">Contributions</span> (

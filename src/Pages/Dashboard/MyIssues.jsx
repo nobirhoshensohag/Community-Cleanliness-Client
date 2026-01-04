@@ -1,12 +1,16 @@
 import { useEffect, useState, useContext } from "react";
-import { AuthContext } from "../Provider/AuthContext";
-import Container from "../Components/Container";
+import { AuthContext } from "../../Provider/AuthContext";
+import Container from "../../Components/Container";
 import { useRef } from "react";
-import useAxiosSecure from "../Hooks/useAxiosSecure";
+import useAxiosSecure from "../../Hooks/useAxiosSecure";
 import Swal from "sweetalert2";
 import toast from "react-hot-toast";
-import Loading from "../Components/Loading";
+import Loading from "../../Components/Loading";
 import { Fade } from "react-awesome-reveal";
+import DashboardHeader from "../../Components/DashboardHeader";
+
+
+
 
 const MyIssues = () => {
   const axiosSecure = useAxiosSecure();
@@ -97,11 +101,12 @@ const MyIssues = () => {
 
   return (
     <Fade>
-      <Container className="p-6 md:p-10 min-h-screen">
-        <title>My Issues</title>
-        <h3 className="text-4xl font-bold mb-6">
-          My <span className="text-primary">Issues </span>({myIssues?.length})
-        </h3>
+  <Container className="p-6 md:p-10 min-h-screen">
+    <DashboardHeader />
+
+    <h3 className="text-4xl font-bold mb-6">
+      My <span className="text-primary">Issues</span>
+    </h3>
         {/* Table */}
         <div className="overflow-x-auto">
           <table className="table">

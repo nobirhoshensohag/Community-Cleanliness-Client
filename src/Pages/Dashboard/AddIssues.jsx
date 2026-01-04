@@ -1,10 +1,11 @@
 import { useContext } from "react";
-import { AuthContext } from "../Provider/AuthContext";
+import { AuthContext } from "../../Provider/AuthContext";
 import toast from "react-hot-toast";
-import useAxiosSecure from "../Hooks/useAxiosSecure";
-import Container from "../Components/Container";
-import NewIssueForm from "../Components/NewIssueForm";
+import useAxiosSecure from "../../Hooks/useAxiosSecure";
+import Container from "../../Components/Container";
+import NewIssueForm from "../../Components/NewIssueForm";
 import { Fade } from "react-awesome-reveal";
+import DashboardHeader from "../../Components/DashboardHeader";
 
 const AddIssue = () => {
   const { user } = useContext(AuthContext);
@@ -40,7 +41,8 @@ const AddIssue = () => {
 
   return (
     <Fade>
-      <Container className="p-6 md:p-10 bg-base-100">
+  <Container className="p-6 md:p-10 min-h-screen">
+    <DashboardHeader />
         <title>Add Issues</title>
         
         {/* Header */}
